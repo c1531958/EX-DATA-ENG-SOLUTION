@@ -1,3 +1,6 @@
+from fhir.resources.identifier import Identifier as fhirIdentifier
+
+
 class Identifier:
     def __init__(self) -> None:
         self.create_types = [
@@ -22,7 +25,9 @@ class Identifier:
             )
         """
 
-    def from_fhir(self, patient_id, fhir_identifiers):
+    def from_fhir(self, patient_id: str, fhir_identifiers: list[fhirIdentifier]) -> list[dict]:
+        """Creates a dict of fields required for the encounter table from the fhir encounter object
+        """
         identifiers = []
         for identifier in fhir_identifiers:
             # It looks like MR type entry is duped where one of the entries don't have type id

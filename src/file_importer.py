@@ -2,6 +2,10 @@ import json
 import os
 
 from fhir.resources import construct_fhir_element
+from fhir.resources.condition import Condition as fhirCondition
+from fhir.resources.encounter import Encounter as fhirEncounter
+from fhir.resources.observation import Observation as fhirObservation
+from fhir.resources.patient import Patient as fhirPatient
 
 from src.classes.address import Address
 from src.classes.condition import Condition
@@ -13,6 +17,7 @@ from src.classes.name import Name
 from src.classes.observation import Observation
 from src.classes.patient import Patient
 from src.classes.telecom import Telecom
+from src.utils.postgres_utils import PostgresUtils
 from src.utils import postgres_utils
 
 address = Address()
@@ -27,7 +32,20 @@ patient = Patient()
 telecom = Telecom()
 
 
-def main(data_path):
+def main(data_path: str) -> None:
+    """Iterates over fhir bundle files, separates out different fhir objects and inserts them into
+       according postgres tables.
+
+       Currently imports fhir entries of type patient, encounter,
+       observation and condition. Some of these objects contain sub classes of currently
+       impoted are address, name, language, identifier and telecom
+
+    Args:
+        data_path (str): path to folder of files to import
+
+    Raises:
+        e: if any error is caught close postgres connection gracefully
+    """
     pg = postgres_utils.get_connection()
     # iterate over files
     directory = os.fsencode(data_path)
@@ -58,12 +76,13 @@ def main(data_path):
         raise e
 
 
-def insert_patient_and_its_classes(pg, resource):
+def insert_patient_and_its_classes(pg: PostgresUtils, resource: fhirPatient):
+    """Creates a patient record and records for all its subclasses. Inserts them into postgres
+    """
     patient_id = resource.id
     patient_dict = patient.from_fhir(resource)
     patient_sql = patient.to_insert_query()
     pg.execute(patient_sql, patient_dict)
-    # pg.insert_patient(patient_dict)
     # Insert addresses
     addresses = address.from_fhir(patient_id, resource.address)
     address_sql = address.to_insert_query()
@@ -86,7 +105,10 @@ def insert_patient_and_its_classes(pg, resource):
     pg.execute_many(identifier_sql, identifiers)
 
 
-def insert_encounter_and_its_classes(patient_id, pg, resource):
+def insert_encounter_and_its_classes(
+        patient_id: str, pg: PostgresUtils, resource: fhirEncounter) -> None:
+    """Creates an encounter record and insert it into postgres
+    """
     _, encounter_dict = encounter.from_fhir(patient_id, resource)
     # Insert encounter
     encounterm_sql = encounter.to_insert_query()
@@ -98,13 +120,17 @@ def insert_encounter_and_its_classes(patient_id, pg, resource):
     pg.insert_participants(participants, encounter_participants)
 
 
-def insert_observation(patient_id, pg, resource):
+def insert_observation(patient_id: str, pg: PostgresUtils, resource: fhirObservation) -> None:
+    """Creates an observation record and insert it into postgres
+    """
     observation_dict = observation.from_fhir(patient_id, resource)
     observationm_sql = observation.to_insert_query()
     pg.execute(observationm_sql, observation_dict)
 
 
-def insert_condition(patient_id, pg, resource):
+def insert_condition(patient_id: str, pg: PostgresUtils, resource: fhirCondition) -> None:
+    """Creates a condition record and insert it into postgres
+    """
     condition_dict = condition.from_fhir(patient_id, resource)
     condition_sql = condition.to_insert_query()
     pg.execute(condition_sql, condition_dict)

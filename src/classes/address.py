@@ -1,3 +1,6 @@
+from fhir.resources.address import Address as fhirAddress
+
+
 class Address:
     def __init__(self) -> None:
         self.create_types = [
@@ -27,7 +30,9 @@ class Address:
             )
         """
 
-    def from_fhir(self, patient_id, fhir_addresses):
+    def from_fhir(self, patient_id: str, fhir_addresses: fhirAddress) -> dict:
+        """Creates a dict of fields required for the address table from the fhir address object
+        """
         addresses = []
         for address in fhir_addresses:
             lat = next(

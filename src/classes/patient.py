@@ -1,3 +1,6 @@
+from fhir.resources.patient import Patient as fhirPatient
+
+
 class Patient:
     def __init__(self) -> None:
         self.create_types = [
@@ -24,7 +27,9 @@ class Patient:
             )
         """
 
-    def from_fhir(self, fhir_patient):
+    def from_fhir(self, fhir_patient: fhirPatient) -> dict:
+        """Creates a dict of fields required for the patient table from the fhir patient object
+        """
         (
             race,
             ethnicity,

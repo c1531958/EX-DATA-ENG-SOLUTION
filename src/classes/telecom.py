@@ -1,3 +1,5 @@
+from fhir.resources.contactpoint import ContactPoint
+
 class Telecom:
     def __init__(self) -> None:
         self.create_types = [
@@ -21,7 +23,9 @@ class Telecom:
             )
         """
 
-    def from_fhir(self, patient_id, fhir_telecoms):
+    def from_fhir(self, patient_id: str, fhir_telecoms: list[ContactPoint]) -> list[dict]:
+        """Creates a list of dict fields required for the telecom table from the fhir telecom object
+        """
         comm_methods = []
         for com in fhir_telecoms:
             com_dict = dict(

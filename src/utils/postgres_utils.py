@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 import psycopg
 
@@ -8,7 +9,7 @@ class PostgresUtils:
         self.connection = None
         self.cursor = None
 
-    def connect(self, db_name=None):
+    def connect(self, db_name: Optional[str] = None):
         self.connection = psycopg.connect(
             dbname=os.environ.get("DB_NAME") or db_name,
             user=os.environ.get("USERNAME"),
@@ -29,15 +30,20 @@ class PostgresUtils:
     def get_cursor(self):
         self.cursor = self.connection.cursor()
 
-    def execute(self, sql, record):
+    def execute(self, sql: str, record: dict):
         self.cursor.execute(sql, record)
         self.connection.commit()
 
-    def execute_many(self, sql, records):
+    def execute_many(self, sql: str, records: list[dict]):
         self.cursor.executemany(sql, records)
         self.connection.commit()
 
-    def insert_languages(self, languages):
+    def insert_languages(self, languages: list[dict]):
+        """Inserts a list of participants and their connecting table records
+
+        Args:
+            languages (list[dict]): list of languages to insert
+        """
         self.cursor.executemany(
             """
             INSERT INTO language (id, language)
@@ -47,17 +53,15 @@ class PostgresUtils:
         )
         self.connection.commit()
 
-    def insert_identifiers(self, identifiers):
-        self.cursor.executemany(
-            """
-            INSERT INTO identifier (patient_id, assigner, start_timestamp, end_timestamp, system, type_code, type_display, use, value) 
-            VALUES (%(patient_id)s, %(assigner)s, %(start_timestamp)s, %(end_timestamp)s, %(system)s, %(type_code)s, %(type_display)s, %(use)s, %(value)s)
-            """,
-            identifiers,
-        )
-        self.connection.commit()
+    def insert_participants(
+            self, participants: list[dict], encounter_participants: list[dict]) -> None:
+        """Inserts a list of participants and their connecting table records
 
-    def insert_participants(self, participants, encounter_participants):
+        Args:
+            participants (list[dict]): list of participants to insert
+            encounter_participants (list[dict]): list of encounter_participants to insert
+        """
+        # This qiery inserts a record if no record with such a name exists, else returns the id
         for i, participant in enumerate(participants):
             self.cursor.execute(
                 """

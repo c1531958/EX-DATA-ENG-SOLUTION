@@ -1,3 +1,6 @@
+from fhir.resources.condition import Condition as fhirCondition
+
+
 class Condition:
     def __init__(self) -> None:
         self.create_types = [
@@ -25,7 +28,9 @@ class Condition:
             )
         """
 
-    def from_fhir(self, patient_id, fhir_condition):
+    def from_fhir(self, patient_id: str, fhir_condition: fhirCondition):
+        """Creates a dict of fields required for the condition table from the fhir condition object
+        """
         condition_dict = dict(
             condition_id=fhir_condition.id,
             patient_id=patient_id,

@@ -1,3 +1,6 @@
+from fhir.resources.observation import Observation as fhirObservation
+
+
 class Observation:
     def __init__(self) -> None:
         self.create_types = [
@@ -22,7 +25,9 @@ class Observation:
             )
         """
 
-    def from_fhir(self, patient_id, fhir_observation):
+    def from_fhir(self, patient_id: str, fhir_observation: fhirObservation) -> dict:
+        """Creates dict fields required for the observation table from the fhir observation object
+        """
         observation_dict = dict(
             observation_id=fhir_observation.id,
             patient_id=patient_id,  # or can be extracted from subject field TODO check

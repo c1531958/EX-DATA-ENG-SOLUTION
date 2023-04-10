@@ -1,3 +1,6 @@
+from fhir.resources.encounter import Encounter as fhirEncounter
+
+
 class Encounter:
     def __init__(self) -> None:
         self.create_types = [
@@ -22,7 +25,11 @@ class Encounter:
             )
         """
 
-    def from_fhir(self, patient_id, fhir_encounter):
+    def from_fhir(self, patient_id: str, fhir_encounter: fhirEncounter) -> tuple[list, list]:
+        """Creates a dict of fields required for the encounter table from the fhir encounter object
+
+          TODO - contains organisations that's currently not implemented
+        """
         # Use org_names to keep track of unique orgs between provdier and locations
         orgs, org_names = [], set()
         hospitalization = (

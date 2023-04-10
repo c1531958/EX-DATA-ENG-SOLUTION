@@ -15,7 +15,11 @@ class EncounterParticipant:
             )
         """
 
-    def from_fhir(self, patient_id, encounter_id, fhir_participants):
+    def from_fhir(self, patient_id: str, encounter_id: str,
+                  fhir_participants: list) -> tuple[list, list]:
+        """Creates a list of dicts for participants and encounter_participant from
+           the fhir participant object
+        """
         participants, encounter_participants = [], []
         # TODO extract type from the reference string
         for participant in fhir_participants:

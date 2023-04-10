@@ -6,8 +6,8 @@ from src.classes.files.languages import bcp_47_languages
 from src.utils.postgres_utils import PostgresUtils
 
 
-def create_tables():
-    """create tables in the PostgreSQL database"""
+def create_tables() -> None:
+    """Creates all the tables in the PostgreSQL database"""
     pg = PostgresUtils()
     pg.connect()
     pg.get_cursor()
@@ -28,6 +28,7 @@ def create_tables():
             "observation",
             "condition",
         ]
+        # dynamically iterate over all the defined tables in the classes folder
         for filename in module_order:
             module_name = f"{path}.{filename}"
             class_neme = filename.title().replace("_", "")
@@ -39,9 +40,8 @@ def create_tables():
         # Prefill the language table
         pg.insert_languages(bcp_47_languages)
 
-        # commit the changes
+        # commit the changes and close the connection
         pg.connection.commit()
-        # close communication with the PostgreSQL database server
         pg.cursor.close()
     except (Exception, psycopg.DatabaseError) as error:
         pg.connection.close()

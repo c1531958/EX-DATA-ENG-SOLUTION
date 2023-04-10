@@ -1,3 +1,6 @@
+from fhir.resources.humanname import HumanName
+
+
 class Name:
     def __init__(self) -> None:
         self.create_types = [
@@ -21,7 +24,9 @@ class Name:
             )
         """
 
-    def from_fhir(self, patient_id, fhir_names):
+    def from_fhir(self, patient_id: str, fhir_names: HumanName):
+        """Creates a list of dicts of fields required for the names table from the fhir name object
+        """
         names = []
         for name in fhir_names:
             name_dict = dict(
