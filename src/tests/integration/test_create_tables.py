@@ -1,4 +1,4 @@
-from src import create_tables
+import create_tables
 
 
 def exists_query(test_db, table_name):

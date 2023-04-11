@@ -2,16 +2,16 @@ import datetime
 import json
 
 import pytest
-from src.classes.address import Address
-from src.classes.condition import Condition
-from src.classes.encounter import Encounter
-from src.classes.encounter_participant import EncounterParticipant
-from src.classes.identifier import Identifier
-from src.classes.language import Language
-from src.classes.name import Name
-from src.classes.observation import Observation
-from src.classes.patient import Patient
-from src.classes.telecom import Telecom
+from classes.address import Address
+from classes.condition import Condition
+from classes.encounter import Encounter
+from classes.encounter_participant import EncounterParticipant
+from classes.identifier import Identifier
+from classes.language import Language
+from classes.name import Name
+from classes.observation import Observation
+from classes.patient import Patient
+from classes.telecom import Telecom
 from fhir.resources import construct_fhir_element
 
 

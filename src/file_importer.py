@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 
 from fhir.resources import construct_fhir_element
@@ -7,18 +8,20 @@ from fhir.resources.encounter import Encounter as fhirEncounter
 from fhir.resources.observation import Observation as fhirObservation
 from fhir.resources.patient import Patient as fhirPatient
 
-from src.classes.address import Address
-from src.classes.condition import Condition
-from src.classes.encounter import Encounter
-from src.classes.encounter_participant import EncounterParticipant
-from src.classes.identifier import Identifier
-from src.classes.language import Language
-from src.classes.name import Name
-from src.classes.observation import Observation
-from src.classes.patient import Patient
-from src.classes.telecom import Telecom
-from src.utils.postgres_utils import PostgresUtils
-from src.utils import postgres_utils
+from classes.address import Address
+from classes.condition import Condition
+from classes.encounter import Encounter
+from classes.encounter_participant import EncounterParticipant
+from classes.identifier import Identifier
+from classes.language import Language
+from classes.name import Name
+from classes.observation import Observation
+from classes.patient import Patient
+from classes.telecom import Telecom
+from utils import postgres_utils
+from utils.postgres_utils import PostgresUtils
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s-%(lineno)d- %(message)s")
 
 address = Address()
 condition = Condition()
@@ -52,6 +55,7 @@ def main(data_path: str) -> None:
     try:
         for file in os.listdir(directory):
             filename = os.fsdecode(file)
+            logging.info(f"Importing {filename}")
             f = open(f"{data_path}/{filename}")
             f = json.load(f)
             file_type = f.get("resourceType")
@@ -70,6 +74,7 @@ def main(data_path: str) -> None:
                     insert_observation(patient_id, pg, resource)
                 elif resource.resource_type == "Condition":
                     insert_condition(patient_id, pg, resource)
+        logging.info("Import finished")
 
     except Exception as e:
         pg.connection.close()

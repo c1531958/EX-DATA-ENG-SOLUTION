@@ -1,7 +1,7 @@
 import os
 
 import pytest
-from src.utils import postgres_utils
+from utils import postgres_utils
 
 
 def ensure_automated_test_vars_set():

@@ -2,8 +2,8 @@ import importlib
 
 import psycopg
 
-from src.classes.files.languages import bcp_47_languages
-from src.utils.postgres_utils import PostgresUtils
+from classes.files.languages import bcp_47_languages
+from utils.postgres_utils import PostgresUtils
 
 
 def create_tables() -> None:
@@ -13,7 +13,7 @@ def create_tables() -> None:
     pg.get_cursor()
     try:
         # create tables one by one in order
-        path = "src.classes"
+        path = "classes"
         module_order = [
             "patient",
             "address",

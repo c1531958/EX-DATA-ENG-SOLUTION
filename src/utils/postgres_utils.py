@@ -12,7 +12,7 @@ class PostgresUtils:
     def connect(self, db_name: Optional[str] = None):
         self.connection = psycopg.connect(
             dbname=os.environ.get("DB_NAME") or db_name,
-            user=os.environ.get("USERNAME"),
+            user=os.environ.get("USER_NAME"),
             password=os.environ.get("PASSWORD"),
             port=os.environ.get("PORT"),
             host=os.environ.get("HOST"),
@@ -20,7 +20,7 @@ class PostgresUtils:
 
     def connect_server(self):
         self.connection = psycopg.connect(
-            user=os.environ.get("USERNAME"),
+            user=os.environ.get("USER_NAME"),
             password=os.environ.get("PASSWORD"),
             port=os.environ.get("PORT"),
             host=os.environ.get("HOST"),

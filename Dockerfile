@@ -5,4 +5,4 @@ COPY src/ ./
 
 RUN pip install -r requirements.txt
 
-CMD [ "python", "./run_both.py"]
+CMD [ "python", "./main.py"]

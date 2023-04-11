@@ -1,7 +1,7 @@
 import os
 
-import src.create_tables as create_tables
-import src.file_importer as file_importer
+import create_tables as create_tables
+import file_importer as file_importer
 
 
 def test_file_importer(create_test_db):

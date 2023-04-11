@@ -37,6 +37,6 @@ services:
     environment:
       HOST: db
       PORT: 5432
-      USERNAME: ${USER_NAME}
+      USER_NAME: ${USER_NAME}
       PASSWORD: ${PASSWORD}
       DB_NAME: ${DB_NAME}
